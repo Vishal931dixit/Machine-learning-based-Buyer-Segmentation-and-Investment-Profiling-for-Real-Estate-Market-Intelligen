@@ -230,27 +230,43 @@ elif page=="Investor Behavior Dashboard":
 elif page=="Geographic Buyer Analysis":
 
     st.header(
-    "Regional Buyer Distribution"
+        "Regional Buyer Distribution"
     )
 
-    region_cluster=pd.crosstab(
+    # Find encoded region columns
+    region_cols = [
 
-    df['region'],
-    df['Cluster']
+        col for col in df.columns
+        if col.startswith("region_")
+
+    ]
+
+    # Recover original region names
+    region_data = df[region_cols].idxmax(axis=1)
+
+    region_data = region_data.str.replace(
+        "region_",
+        ""
+    )
+
+    region_cluster = pd.crosstab(
+
+        region_data,
+        df["Cluster"]
 
     )
 
-    fig=px.bar(
+    fig = px.bar(
 
-    region_cluster,
-
-    barmode='group'
+        region_cluster,
+        barmode='group',
+        title="Buyer Segments by Region"
 
     )
 
     st.plotly_chart(
-    fig,
-    use_container_width=True
+        fig,
+        use_container_width=True
     )
 
 ######################################################
