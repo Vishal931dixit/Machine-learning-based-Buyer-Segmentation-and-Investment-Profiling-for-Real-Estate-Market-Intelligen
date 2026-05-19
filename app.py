@@ -60,17 +60,29 @@ features=model_data["features"]
 ######################################################
 
 # Handling missing values (object columns with mode, numeric with median)
+# Handle missing values safely
+
 for col in df.columns:
-    if df[col].dtype == "object":
-        df[col].fillna(df[col].mode()[0], inplace=True)
+
+    if pd.api.types.is_numeric_dtype(df[col]):
+
+        df[col] = df[col].fillna(
+            df[col].median()
+        )
+
     else:
-        df[col].fillna(df[col].median(), inplace=True)
+
+        df[col] = df[col].fillna(
+            df[col].mode()[0]
+        )
 
 # Remove duplicate entries
 df.drop_duplicates(inplace=True)
 
 # Normalize labels (strip and lowercase object columns)
-for col in df.select_dtypes(include='object').columns:
+for col in df.select_dtypes(
+    include=['object','string']
+).columns:
     df[col] = df[col].astype(str).str.strip().str.lower()
 
 # Robustly convert 'date_of_birth' to datetime, handling mixed formats
