@@ -248,27 +248,23 @@ elif page=="Geographic Buyer Analysis":
 else:
 
     st.header(
-    "Cluster Statistics"
+        "Cluster Statistics"
     )
 
-    summary=(=
+    summary=(
 
-    df.groupby(
-    "Cluster"
-    )
+        df.groupby(
+            "Cluster"
+        )[
 
-    [
+            [
+                'Age',
+                'sale_price',
+                'satisfaction_score'
+            ]
 
-    ['Age',
-    'sale_price',
-    'satisfaction_score']
-
-    ]
-
-    .mean()
+        ].mean()
 
     )
 
-    st.dataframe(
-    summary
-    )
+    st.dataframe(summary)
